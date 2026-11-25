@@ -1,0 +1,18 @@
+title: Michigan County Seat Bicycle Diary
+theme: jekyll-theme-primer
+
+defaults:
+  - scope:
+      path: michigan-trip-diary.md
+    values:
+      layout: default
+      title: Visiting Every County Seat in Michigan
+
+exclude:
+  - README.md
+  - tests
+  - outputs
+  - "*.py"
+  - "*.csv"
+  - "*.geojson"
+  - michigan-county-seat-route.html

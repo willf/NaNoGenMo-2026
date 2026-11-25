@@ -2,6 +2,8 @@
 
 This National Novel Generation Month project simulates a bicycle trip through Michigan’s 83 county seats using historical weather observations. The bundled [dataset](michigan-trip-diary.csv) and [factual diary](michigan-trip-diary.md) cover 98 days, from May 25 through August 30, 2026.
 
+Read the diary and explore the interactive bike route map on the [project website](https://willf.github.io/NaNoGenMo-2026/).
+
 Run the commands below from the project folder with Python 3.10 or newer and system time-zone data. The scripts use the Python standard library. Data collection needs internet access when source files are absent from the cache. Rendering works with local exports.
 
 ## Generate the data
