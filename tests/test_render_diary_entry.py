@@ -1,4 +1,5 @@
 import csv
+from datetime import date
 import json
 from pathlib import Path
 import subprocess
@@ -6,7 +7,8 @@ import sys
 import tempfile
 import unittest
 
-from render_diary_entry import load_dataset, render_entry
+from diary_data import load_dataset
+from render_diary_entry import render_entry
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -21,22 +23,38 @@ MINIMUM = {
 class RenderTests(unittest.TestCase):
     def test_first_entry_markdown(self):
         expected = (
-            "## 2026-05-25\n\n"
+            "## Monday, May 25, 2026\n\n"
+            "My goal for the day was to reach Eagle River in Keweenaw County.\n\n"
+            "I set my alarm for at 5:30 AM.\n\n"
             "I started in Eagle River, MI and covered 20 miles SSW by bicycle. "
             "I ended the day near Lake Linden, MI. The day's county-seat stop was Eagle River (Keweenaw County).\n\n"
-            "Daytime reports indicated sunny or clear skies. "
+            "It was relatively dry during the ride.\n\n"
+            "It was moderately warm during the ride.\n\n"
+            "Today's ride was relatively easy.\n\n"
+            "Weather for the day was as follows:  Daytime reports indicated sunny or clear skies. "
             "The station recorded 0.06 in of precipitation (light rain). "
             "The temperature ranged from 45°F to 85°F. Wind was from WNW. "
             "Wind speed averaged 5.9 mph. The peak gust was 42.6 mph. "
             "Average relative humidity was 59.1%.\n\n"
-            "At my starting location (EDT), sunrise was at 6:06 AM and sunset was at 9:35 PM.\n"
+            "At my starting location (EDT), sunrise was at 6:06 AM and sunset was at 9:35 PM.\n\n"
+            "I went to bed at 10:00 PM.\n"
         )
         self.assertEqual(render_entry(load_dataset(DIARY), 0), expected)
 
     def test_offset_uses_row_order(self):
         next_record = dict(MINIMUM, date="2026-04-30")
-        self.assertTrue(render_entry([MINIMUM, next_record], 0).startswith("## 2026-05-25\n"))
-        self.assertTrue(render_entry([MINIMUM, next_record], 1).startswith("## 2026-04-30\n"))
+        self.assertTrue(render_entry([MINIMUM, next_record], 0).startswith("## Monday, May 25, 2026\n"))
+        self.assertTrue(render_entry([MINIMUM, next_record], 1).startswith("## Thursday, April 30, 2026\n"))
+
+    def test_second_day_uses_previous_mileage_and_next_county_seat(self):
+        first = dict(MINIMUM, bicycle_miles=40)
+        second = dict(MINIMUM, date="2026-05-26")
+        third = dict(MINIMUM, date="2026-05-27", county_seats_reached="Baraga",
+                     county_seat_places_reached="L'Anse")
+        entry = render_entry([first, second, third], 1)
+        self.assertIn("I felt somewhat tired from yesterday's ride.", entry)
+        self.assertIn("My goal for the day was to reach L'Anse in Baraga County.", entry)
+        self.assertIn("covered 20 miles by bicycle", entry)
 
     def test_rain_layover_stays_put(self):
         entry = render_entry([dict(MINIMUM, bicycle_miles=0, day_status="Rain layover",
@@ -73,8 +91,7 @@ class RenderTests(unittest.TestCase):
         row = dict(MINIMUM, bicycle_miles="1.0", campsite_notes="Reserved", future_data={"food": "bread"})
         entry = render_entry([row], 0)
         self.assertIn("covered 1 mile by bicycle", entry)
-        self.assertEqual(entry.count("\n\n"), 1)
-        self.assertNotIn("Reserved", entry)
+        self.assertEqual(entry, render_entry([dict(MINIMUM, bicycle_miles="1.0")], 0))
 
     def test_trace_and_zero_measurements_are_distinct(self):
         dry = dict(MINIMUM, precip_in="0", rain_class="Dry / trace", avg_wind_mph=0, wind_from="Calm")
@@ -98,6 +115,8 @@ class RenderTests(unittest.TestCase):
     def test_midnight_and_noon_in_daylight(self):
         entry = render_entry([dict(MINIMUM, sunrise="00:01", sunset="12:03")], 0)
         self.assertIn("sunrise was at 12:01 AM and sunset was at 12:03 PM", entry)
+        self.assertIn("11:30 PM.", entry)
+        self.assertIn("I went to bed at 12:30 PM.", entry)
 
     def test_data_is_encoded_as_markdown_text(self):
         row = dict(MINIMUM, start_location="A *Camp* <Gate> & [Park]\n## Not another date")
@@ -180,7 +199,8 @@ class DatasetTests(unittest.TestCase):
         visited = []
         for row, entry in zip(rows, entries):
             with self.subTest(date=row["date"]):
-                self.assertTrue(entry.startswith(f'## {row["date"]}\n\n'))
+                heading = date.fromisoformat(row["date"]).strftime("%A, %B %-d, %Y")
+                self.assertTrue(entry.startswith(f"## {heading}\n\n"))
                 self.assertIn("precipitation", entry)
                 self.assertIn("relative humidity", entry)
                 self.assertIn("sunrise was at", entry)
@@ -194,7 +214,7 @@ class DatasetTests(unittest.TestCase):
                     self.assertIn(f"{place} ({county} County)", entry)
         self.assertEqual(len(visited), 83)
         self.assertEqual(set(visited), set(county_seats))
-        self.assertTrue(entries[-1].startswith("## 2026-08-30\n"))
+        self.assertTrue(entries[-1].startswith("## Sunday, August 30, 2026\n"))
         self.assertIn("I ended the day in Monroe, MI.", entries[-1])
         self.assertEqual(sum("for a heavy-rain layover" in entry for entry in entries), 7)
         self.assertEqual(sum("Mackinac Bridge shuttle" in entry for entry in entries), 1)

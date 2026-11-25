@@ -58,8 +58,8 @@ def render_trip(dataset: Sequence[Mapping | DiaryDay]) -> str:
         )
 
     body = [
-        render_day(days, i + 1 if i + 1 < len(days) else i).rstrip("\n")
-        for i, _ in enumerate(days)
+        render_day(days, index).rstrip("\n")
+        for index in range(len(days))
     ]
     postscript = "## Postscript\n\n" + " ".join(summary)
     everthing = "\n\n".join([PREFACE, *body, postscript]) + "\n"

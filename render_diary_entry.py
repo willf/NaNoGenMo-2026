@@ -6,9 +6,9 @@ the dataset's row order, so offset 0 renders the first day.
 """
 
 import argparse
-from collections.abc import Sequence
+from collections.abc import Mapping, Sequence
 import csv
-from datetime import time, datetime, date, timedelta
+from datetime import time
 from decimal import Decimal
 import html
 from pathlib import Path
@@ -171,48 +171,25 @@ def goal_paragraph(day, next_day: DiaryDay) -> str:
     return f"My goal for the day was to reach {goal_str(first_goal)}."
 
 
+def rounded_time(clock: time, offset_minutes: int) -> time:
+    minutes = clock.hour * 60 + clock.minute + offset_minutes
+    rounded = (minutes + 15) // 30 * 30 % (24 * 60)
+    hour, minute = divmod(rounded, 60)
+    return time(hour, minute)
+
+
 def wake_paragraph(day) -> str:
-    # wake up 30 minutes before sunrise.
     sunrise = day.daylight.sunrise if day.daylight else None
     if sunrise is not None:
-        planned_wake_time = (
-            datetime.combine(date.min, sunrise) - timedelta(minutes=30)
-        ).time()
-        # round to nearest half hour
-        minute = planned_wake_time.minute
-        if minute < 15:
-            planned_wake_time = planned_wake_time.replace(minute=0)
-        elif minute < 45:
-            planned_wake_time = planned_wake_time.replace(minute=30)
-        else:
-            planned_wake_time = (
-                (datetime.combine(date.min, planned_wake_time) + timedelta(hours=1))
-                .time()
-                .replace(minute=0)
-            )
+        planned_wake_time = rounded_time(sunrise, -30)
         return f"I set my alarm for at {clock_text(planned_wake_time)}."
     return ""
 
 
 def sleep_paragraph(day: DiaryDay) -> str:
-    # go to sleep 30 minutes after sunset, rounded
     sunset = day.daylight.sunset if day.daylight else None
     if sunset is not None:
-        planned_sleep_time = (
-            datetime.combine(date.min, sunset) + timedelta(minutes=30)
-        ).time()
-        # round to nearest half hour
-        minute = planned_sleep_time.minute
-        if minute < 15:
-            planned_sleep_time = planned_sleep_time.replace(minute=0)
-        elif minute < 45:
-            planned_sleep_time = planned_sleep_time.replace(minute=30)
-        else:
-            planned_sleep_time = (
-                (datetime.combine(date.min, planned_sleep_time) + timedelta(hours=1))
-                .time()
-                .replace(minute=0)
-            )
+        planned_sleep_time = rounded_time(sunset, 30)
         return f"I went to bed at {clock_text(planned_sleep_time)}."
     return ""
 
@@ -319,13 +296,13 @@ def heat_paragraph(day: DiaryDay) -> str:
 
 
 def render_day(
-    days: Sequence[DiaryDay],
+    days: Sequence[Mapping | DiaryDay],
     index: int,
 ) -> str:
-    """Write a factual Markdown entry from a typed diary day."""
-    day = days[index]
-    next_day = days[index + 1] if index + 1 < len(days) else day
-    previous_day = days[index - 1] if index - 1 > 0 else None
+    """Write a Markdown entry using the selected day and its neighbors."""
+    day = day_at(days, index)
+    next_day = day_at(days, index + 1) if index + 1 < len(days) else day
+    previous_day = day_at(days, index - 1) if index > 0 else None
     paragraphs = [
         f"## {display_date_with_weekday_and_month(day.date)}",
         goal_paragraph(day, next_day),
@@ -343,7 +320,7 @@ def render_day(
     return "\n\n".join(paragraph for paragraph in paragraphs if paragraph) + "\n"
 
 
-def render_entry(days: Sequence[DiaryDay], offset: int) -> str:
+def render_entry(days: Sequence[Mapping | DiaryDay], offset: int) -> str:
     """Render one entry selected by its zero-based offset."""
     return render_day(days, offset)
 
@@ -358,9 +335,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     )
     args = parser.parse_args(argv)
     try:
-        dataset = load_dataset(args.dataset)
-        days = [entry for entry in dataset if isinstance(entry, DiaryDay)]
-        entry = render_entry(days, args.offset)
+        entry = render_entry(load_dataset(args.dataset), args.offset)
     except (OSError, ValueError, IndexError, csv.Error) as error:
         parser.error(str(error))
     print(entry, end="")

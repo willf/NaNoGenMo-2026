@@ -60,7 +60,7 @@ class DiaryDayTests(unittest.TestCase):
         rows = load_dataset(DATASET)
         days = [day_at(rows, index) for index in range(len(rows))]
         self.assertIs(day_at(days, 0), days[0])
-        self.assertEqual(render_entry(rows, 0), render_day(days[0]))
+        self.assertEqual(render_entry(rows, 0), render_day(days, 0))
         self.assertEqual(render_entry(days, 0), render_entry(rows, 0))
         self.assertEqual(render_trip(days), render_trip(rows))
 
@@ -68,7 +68,6 @@ class DiaryDayTests(unittest.TestCase):
         rows = load_dataset(DATASET)
         dataset = [{"date": "bad date"}, rows[0]]
         self.assertEqual(day_at(dataset, 1), day_at(rows, 0))
-        self.assertEqual(render_entry(dataset, 1), render_entry(rows, 0))
 
 
 if __name__ == "__main__":

@@ -4,11 +4,33 @@
 
 In May, 2026, I embarked on a journey to visit every county seat in Michigan by bicycle.This is the diary of that journey. At least, as I imagined it.
 
+## Monday, May 25, 2026
+
+My goal for the day was to reach Eagle River in Keweenaw County.
+
+I set my alarm for at 5:30 AM.
+
+I started in Eagle River, Michigan and covered 20 miles SSW by bicycle. I ended the day near Lake Linden, Michigan. The day's county-seat stop was Eagle River (Keweenaw County).
+
+It was relatively dry during the ride.
+
+It was moderately warm during the ride.
+
+Today's ride was relatively easy.
+
+Weather for the day was as follows:  Daytime reports indicated sunny or clear skies. The station recorded 0.06 in of precipitation (light rain). The temperature ranged from 45°F to 85°F. Wind was from WNW. Wind speed averaged 5.9 mph. The peak gust was 42.6 mph. Average relative humidity was 59.1%.
+
+At my starting location (EDT), sunrise was at 6:06 AM and sunset was at 9:35 PM.
+
+I went to bed at 10:00 PM.
+
 ## Tuesday, May 26, 2026
 
 My goal for the day was to reach Houghton in Houghton County.
 
 I set my alarm for at 5:30 AM.
+
+I felt fine after yesterday's ride.
 
 I started near Lake Linden, Michigan and covered 20 miles SW by bicycle. I ended the day near Painesdale, Michigan. The day's county-seat stop was Houghton (Houghton County).
 
@@ -2249,30 +2271,6 @@ Today's ride was moderately challenging.
 Weather for the day was as follows:  Daytime reports indicated mostly sunny skies. The station recorded no precipitation. The temperature ranged from 59°F to 83°F. Wind was from SSW. Wind speed averaged 6.5 mph. The peak gust was 20.7 mph. Average relative humidity was 62%.
 
 At my starting location (EDT), sunrise was at 6:54 AM and sunset was at 8:11 PM.
-
-I went to bed at 8:30 PM.
-
-## Sunday, August 30, 2026
-
-My goal for the day was to reach Monroe in Monroe County.
-
-I set my alarm for at 6:30 AM.
-
-I felt somewhat tired from yesterday's ride.
-
-I started near Detroit Beach, Michigan and covered 4.4 miles SSW by bicycle. I ended the day in Monroe, Michigan. The day's county-seat stop was Monroe (Monroe County).
-
-I had a cross-tailwind during the ride.
-
-It was very humid during the ride.
-
-It was moderately warm during the ride.
-
-Today's ride was relatively easy.
-
-Weather for the day was as follows:  Daytime reports indicated mostly cloudy skies. The station recorded 0.17 in of precipitation (light rain). The temperature ranged from 66.2°F to 77°F. Wind was from S. Wind speed averaged 5.2 mph. Average relative humidity was 89.3%.
-
-At my starting location (EDT), sunrise was at 6:57 AM and sunset was at 8:10 PM.
 
 I went to bed at 8:30 PM.
 
