@@ -1,0 +1,18 @@
+# Python bytecode, test caches, coverage, and virtual environments
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.venv/
+venv/
+
+# Local settings and downloaded data
+.env
+.env.local
+/michigan-diary-cache/
+
+# macOS metadata and Excel lock files
+.DS_Store
+~$*.xlsx
