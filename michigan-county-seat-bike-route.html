@@ -34,6 +34,7 @@ h1 { font-size: clamp(1.8rem, 4vw, 2.75rem); letter-spacing: -.045em; line-heigh
 header p { margin-top: 8px; color: var(--muted); }
 .metrics { font-size: .93rem; white-space: normal; font-variant-numeric: tabular-nums; }
 .metrics strong { color: var(--ink); font-weight: 640; }
+.metrics a { color: var(--route-selected); text-underline-offset: 3px; white-space: nowrap; }
 .workspace { display: grid; grid-template-columns: minmax(0, 2.45fr) minmax(260px, 1fr); gap: 18px; align-items: stretch; }
 .map-panel { min-width: 0; }
 .map-frame { position: relative; width: 100%; isolation: isolate; overflow: hidden; background: var(--water); border: 1px solid var(--line); border-radius: 12px; }
@@ -130,7 +131,10 @@ footer a { color: inherit; text-underline-offset: 3px; }
       <h1>Michigan county-seat bicycle route</h1>
       <p>Keweenaw County to Monroe County via the Mackinac Bridge shuttle</p>
     </div>
-    <p class="metrics"><strong>83 stops</strong> · <strong>2,904 bicycle miles</strong> · <strong>304 h 35 min</strong> moving</p>
+    <p class="metrics">
+      <strong>83 stops</strong> · <strong>2,904 bicycle miles</strong> · <strong>304 h 35 min</strong> moving ·
+      <a href="michigan-trip-diary.html">Read the diary</a>
+    </p>
   </header>
   <div class="workspace">
     <section class="map-panel" aria-label="Interactive route map">
